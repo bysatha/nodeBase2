@@ -1,28 +1,32 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const requestIp = require('request-ip');
-var multer = require('multer');
-var upload = multer({
+const multer = require('multer');
+const upload = multer({
   dest: './uploads'
 });
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/user');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('../models/user');
 
-var mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-var db = require('../database');
+const db = require('../database');
+//const jwt = require("jsonwebtoken");
+//const keys = require("../config/keys");
+
+//const ensureAuthenticated = require("../middleware/auth");
 
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
+router.get('/', ensureAuthenticated, function (req, res, next) {
   res.send('respond with a resource');
 });
 
 router.get('/register', ensureAuthenticated, function (req, res, next) {
 
-  var username = req.user.username;
+  const username = req.user.username;
   db.collection('users').find({
     username: username
   }).toArray((err, results) => {
@@ -90,8 +94,50 @@ router.post('/login',
                 if (err) {
                   console.log(err);
                 } else {
-                  req.flash('success', 'You are now logged in');
-                  res.redirect('/');
+
+                  const payload = {
+                    username: req.body.username,
+                    role: 3
+                  };
+
+                  // Sign token
+                 /* jwt.sign(
+                      payload,
+                      keys.secretOrKey, {
+                        expiresIn: 31556926 // 1 year in seconds
+                      },
+                      (err, token) => {
+                        res.json({
+                          success: true,
+                          token: "Bearer " + token
+                        });
+                      }
+                  );*/
+
+
+                  // Create token
+                 /* const token = jwt.sign(
+                    payload,
+                    keys.secretOrKey,
+                    {
+                      expiresIn: 31556926,
+                    }
+                  );
+
+                  var tokenObj = {
+                    token: token
+                  };*/
+
+                  // save user token
+
+                    req.flash('success', 'You are now logged in');
+                    /*res.json({
+                      token: token
+                    });*/
+                    res.redirect('/');
+
+
+
                 }
               });
             });
@@ -450,5 +496,6 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/users/login');
   }
 }
+
 
 module.exports = router;

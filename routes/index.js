@@ -1,20 +1,22 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
 const requestIp = require('request-ip');
-var LocalStrategy = require('passport-local').Strategy;
-var multer = require('multer');
-var fs = require('fs');
-var upload = multer({
+const LocalStrategy = require('passport-local').Strategy;
+const multer = require('multer');
+const fs = require('fs');
+const upload = multer({
 	dest: './public/uploads'
 });
-var User = require('../models/user');
-var mongoose = require('mongoose');
-var bcrypt = require('bcryptjs');
-var db = require('../database');
+const User = require('../models/user');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const db = require('../database');
 const {
 	exit
 } = require('process');
+
+//const ensureAuthenticated = require("../middleware/auth");
 
 /* GET user home page. */
 router.get('/', ensureAuthenticated, function (req, res, next) {
@@ -43,6 +45,7 @@ router.get('/', ensureAuthenticated, function (req, res, next) {
 						});
 					}
 				});
+
 			}
 		}
 	});
@@ -468,6 +471,7 @@ router.post('/ans-submit', ensureAuthenticated, function (req, res, next) {
 });
 
 
+
 function ensureAuthenticated(req, res, next) {
 	// check db
 	if (req.isAuthenticated()) {
@@ -487,5 +491,6 @@ function ensureAuthenticated(req, res, next) {
 		res.redirect('/users/login');
 	}
 }
+
 
 module.exports = router;

@@ -19,6 +19,9 @@ var UserSchema = mongoose.Schema({
 	},
 	role: {
 		type: String
+	}, 
+	token: {
+		type: String
 	}
 	/*profileimage:{
 		type: String

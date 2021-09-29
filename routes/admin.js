@@ -13,6 +13,8 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 var db = require('../database');
 
+//const ensureAuthenticated = require("../middleware/auth");
+
 /* GET Admin. */
 router.get('/', ensureAuthenticated, function (req, res, next) {
 	var username = req.user.username;
